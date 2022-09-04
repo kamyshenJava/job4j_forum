@@ -46,7 +46,10 @@
         <table class="table">
             <thead>
             <tr>
-                <th scope="col">Тема</th>
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Author</th>
+                <th scope="col">Edit</th>
             </tr>
             </thead>
             <tbody>
@@ -58,9 +61,12 @@
                         </a>
                     </td>
                     <td><c:out value="${post.description}"/></td>
+                    <td><c:out value="${post.author.name}"/></td>
+                    <c:if test="${post.author == user}">
                     <td><a class="btn btn-outline-success btn-sm mx-auto" href="<c:url value="/edit?id=${post.id}"/>">
                         Edit
                     </a></td>
+                    </c:if>
                 </tr>
             </c:forEach>
             </tbody>

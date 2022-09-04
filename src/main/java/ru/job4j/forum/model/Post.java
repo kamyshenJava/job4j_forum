@@ -1,7 +1,8 @@
 package ru.job4j.forum.model;
 
 import java.time.LocalDateTime;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Post {
@@ -9,6 +10,8 @@ public class Post {
     private String name;
     private String description;
     private LocalDateTime created;
+    private List<Comment> comments = new ArrayList<>();
+    private User author;
 
     public static Post of(String name, String description) {
         Post post = new Post();
@@ -48,6 +51,22 @@ public class Post {
 
     public void setCreated(LocalDateTime created) {
         this.created = created;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
     }
 
     @Override

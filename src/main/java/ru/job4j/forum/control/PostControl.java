@@ -6,10 +6,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.job4j.forum.model.Comment;
 import ru.job4j.forum.model.Post;
 import ru.job4j.forum.model.User;
 import ru.job4j.forum.service.PostService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
@@ -31,20 +33,24 @@ public class PostControl {
     }
 
     @PostMapping("/save")
-    public String save(@ModelAttribute Post post) {
+    public String save(@ModelAttribute Post post, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        post.setAuthor(user);
         postService.save(post);
         return "redirect:/index";
     }
 
     @GetMapping("/edit")
     public String edit(Model model, HttpSession session, @RequestParam("id") int id) {
-        if (session.getAttribute("user") == null) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
             return "redirect:/index";
         }
         Optional<Post> post = postService.findById(id);
-        if (post.isEmpty()) {
+        if (post.isEmpty() || user != post.get().getAuthor()) {
             return "redirect:/";
         }
+        addUserToModel(model, session);
         model.addAttribute("post", post.get());
         return "post/edit";
     }
@@ -64,8 +70,20 @@ public class PostControl {
         if (post.isEmpty()) {
             return "redirect:/";
         }
-        model.addAttribute("post", post.get());
+        addUserToModel(model, session);
+        model.addAttribute("post", postService.setCreatedTimeAgoForComments(post.get()));
         return "post/post";
+    }
+
+    @PostMapping("/comment")
+    public String saveComment(@ModelAttribute Comment comment, HttpServletRequest req, HttpSession session) {
+        int postId = Integer.parseInt(req.getParameter("post_id"));
+        Post post = postService.findById(postId).get();
+        User user = (User) session.getAttribute("user");
+        comment.setPost(post);
+        comment.setAuthor(user);
+        postService.saveComment(comment);
+        return String.format("redirect:/post?id=%d", postId);
     }
 
     private void addUserToModel(Model model, HttpSession session) {

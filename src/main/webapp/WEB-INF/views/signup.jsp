@@ -27,7 +27,7 @@
                             Signup
                         </a>
                     </c:if>
-                    <c:if test="user.name != 'guest'">
+                    <c:if test="${user.name != 'guest'}">
                         <a class="nav-link" href="<c:url value="/logout"/>">
                             <span>${user.name}</span>
                             <span>| Log out</span>
