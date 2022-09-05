@@ -41,6 +41,8 @@
         <h4 class="text-center mb-3">EDIT THE POST</h4>
         <form action="<c:url value='/edit'/>" method="POST">
             <input type="hidden" name="id" value="${post.id}">
+            <input type="hidden" name="author" value="${post.author.id}">
+            <input type="hidden" name="created1" value="${post.created}">
             <div class="mb-4">
                 <input type="text" class="form-control" value="${post.name}" name="name" required>
             </div>

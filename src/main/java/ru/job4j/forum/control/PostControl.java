@@ -13,6 +13,8 @@ import ru.job4j.forum.service.PostService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 
 @Controller
@@ -36,6 +38,7 @@ public class PostControl {
     public String save(@ModelAttribute Post post, HttpSession session) {
         User user = (User) session.getAttribute("user");
         post.setAuthor(user);
+        post.setCreated(LocalDateTime.now());
         postService.save(post);
         return "redirect:/index";
     }
@@ -47,7 +50,7 @@ public class PostControl {
             return "redirect:/index";
         }
         Optional<Post> post = postService.findById(id);
-        if (post.isEmpty() || user != post.get().getAuthor()) {
+        if (post.isEmpty() || !post.get().getAuthor().equals(user)) {
             return "redirect:/";
         }
         addUserToModel(model, session);
@@ -56,7 +59,8 @@ public class PostControl {
     }
 
     @PostMapping("/edit")
-    public String edit(@ModelAttribute Post post) {
+    public String edit(@ModelAttribute Post post, HttpServletRequest req) {
+        post.setCreated(LocalDateTime.parse(req.getParameter("created1")));
         postService.update(post);
         return "redirect:/index";
     }

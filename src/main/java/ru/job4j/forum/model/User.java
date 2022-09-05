@@ -1,12 +1,20 @@
 package ru.job4j.forum.model;
 
+import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
 
+@Entity
+@Table(name = "users")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(unique = true, nullable = false)
     private String name;
+    @Column(nullable = false)
     private String password;
+    @OneToMany(mappedBy = "author")
     private Set<Post> posts;
 
     public static User of(String name, String password) {
@@ -57,7 +65,7 @@ public class User {
             return false;
         }
         User user = (User) o;
-        return Objects.equals(name, user.name);
+        return name.equals(user.name);
     }
 
     @Override

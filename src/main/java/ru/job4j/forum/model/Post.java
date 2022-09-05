@@ -1,16 +1,26 @@
 package ru.job4j.forum.model;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name = "posts")
 public class Post {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
     private String description;
+
+    @Column(columnDefinition = "timestamp without time zone not null default now()")
     private LocalDateTime created;
+    @OneToMany(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "post_id")
     private List<Comment> comments = new ArrayList<>();
+    @ManyToOne(cascade = CascadeType.MERGE)
     private User author;
 
     public static Post of(String name, String description) {

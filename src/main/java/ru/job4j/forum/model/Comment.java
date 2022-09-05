@@ -1,13 +1,23 @@
 package ru.job4j.forum.model;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "comments")
 public class Comment {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(nullable = false)
     private String body;
+    @ManyToOne
     private User author;
+    @ManyToOne
     private Post post;
+    @Column(columnDefinition = "timestamp without time zone not null default now()")
     private LocalDateTime created;
+    @Transient
     private String createdTimeAgo;
 
     public static Comment of(String body, User author, Post post) {
