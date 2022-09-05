@@ -10,8 +10,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Repository
 public class UserMem {
-    private Set<User> users = new HashSet<>();
-    private AtomicInteger ai = new AtomicInteger(1);
+    private final Set<User> users = new HashSet<>();
+    private final AtomicInteger ai = new AtomicInteger(1);
 
     public UserMem() {
         add(User.of("admin", "admin"));
@@ -19,10 +19,6 @@ public class UserMem {
 
     public Set<User> getUsers() {
         return users;
-    }
-
-    public void setUsers(Set<User> users) {
-        this.users = users;
     }
 
     public Optional<User> add(User user) {

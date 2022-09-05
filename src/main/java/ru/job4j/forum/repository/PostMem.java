@@ -9,15 +9,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Repository
 public class PostMem {
-    private Map<Integer, Post> posts = new HashMap<>();
-    private AtomicInteger ai = new AtomicInteger(1);
+    private final Map<Integer, Post> posts = new HashMap<>();
+    private final AtomicInteger ai = new AtomicInteger(1);
 
     public Map<Integer, Post> getPosts() {
-        return posts;
-    }
-
-    public void setPosts(Map<Integer, Post> posts) {
-        this.posts = posts;
+        return new HashMap<>(posts);
     }
 
     public List<Post> findAll() {
@@ -25,10 +21,7 @@ public class PostMem {
     }
 
     public Optional<Post> findById(int id) {
-        return posts.values()
-                .stream()
-                .filter(p -> p.getId() == id)
-                .findFirst();
+        return  Optional.ofNullable(posts.get(id));
     }
 
     public void save(Post post) {
