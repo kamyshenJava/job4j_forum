@@ -8,6 +8,7 @@ import ru.job4j.forum.repository.CommentRepository;
 import ru.job4j.forum.repository.PostRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +36,8 @@ public class PostService {
     }
 
     public void update(Post post) {
+        List<Comment> comments = new ArrayList<>(commentRepository.findCommentsByPostId(post.getId()));
+        post.setComments(comments);
         postRepository.save(post);
     }
 

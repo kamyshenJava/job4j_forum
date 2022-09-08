@@ -17,19 +17,19 @@
             </a>
             <div class="d-flex justify-content-end" id="navbarButtonsExample">
                 <div class="d-flex align-items-center">
-                    <c:if test="${user.name == 'guest'}">
+                    <c:if test="${user == 'anonymousUser'}">
                         <a class="btn btn-link text-decoration-none px-3 me-2" href="<c:url value="/login"/>">
                             Login
                         </a>
                     </c:if>
-                    <c:if test="${user.name == 'guest'}">
+                    <c:if test="${user == 'anonymousUser'}">
                         <a class="btn btn-primary me-3" href="<c:url value="/signup"/>">
                             Signup
                         </a>
                     </c:if>
-                    <c:if test="${user.name != 'guest'}">
+                    <c:if test="${user != 'anonymousUser'}">
                         <a class="nav-link" href="<c:url value="/logout"/>">
-                            <span>${user.name}</span>
+                            <span>${user.username}</span>
                             <span>| Log out</span>
                         </a>
                     </c:if>
@@ -49,7 +49,7 @@
             <h4 class="text-center mb-3">SIGN UP</h4>
             <form action="<c:url value="/signup"/>" method="POST">
                 <div class="mb-4">
-                    <input type="text" class="form-control" placeholder="Username" name="name" required>
+                    <input type="text" class="form-control" placeholder="Username" name="username" required>
                 </div>
                 <div class="mb-4">
                     <input type="password" class="form-control" placeholder="Enter Password" name="password" required>

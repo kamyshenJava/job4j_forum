@@ -11,18 +11,23 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(unique = true, nullable = false)
-    private String name;
+    private String username;
     @Column(nullable = false)
     private String password;
     @OneToMany(mappedBy = "author")
     private Set<Post> posts;
 
-    public static User of(String name, String password) {
+    public static User of(String username, String password) {
         User user = new User();
-        user.name = name;
+        user.username = username;
         user.password = password;
         return user;
     }
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "authority_id")
+    private Authority authority;
+
+    private boolean enabled;
 
     public int getId() {
         return id;
@@ -32,12 +37,12 @@ public class User {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -56,6 +61,22 @@ public class User {
         this.posts = posts;
     }
 
+    public Authority getAuthority() {
+        return authority;
+    }
+
+    public void setAuthority(Authority authority) {
+        this.authority = authority;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -65,11 +86,11 @@ public class User {
             return false;
         }
         User user = (User) o;
-        return name.equals(user.name);
+        return username.equals(user.username);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(username);
     }
 }

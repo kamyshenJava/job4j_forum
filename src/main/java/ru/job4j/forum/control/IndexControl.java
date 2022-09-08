@@ -1,13 +1,12 @@
 package ru.job4j.forum.control;
 
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import ru.job4j.forum.model.User;
 import ru.job4j.forum.service.PostService;
 
-import javax.servlet.http.HttpSession;
+import java.security.Principal;
+
 
 @Controller
 public class IndexControl {
@@ -18,18 +17,9 @@ public class IndexControl {
     }
 
     @GetMapping({"/", "/index"})
-    public String index(Model model, HttpSession session) {
-        addUserToModel(model, session);
+    public String index(Model model, Principal principal) {
+        model.addAttribute("user", principal.getName());
         model.addAttribute("posts", posts.findAll());
         return "index";
-    }
-
-    private void addUserToModel(Model model, HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        if (user == null) {
-            user = new User();
-            user.setName("guest");
-        }
-        model.addAttribute("user", user);
     }
 }

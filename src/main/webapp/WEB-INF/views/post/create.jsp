@@ -15,19 +15,19 @@
             </a>
             <div class="d-flex justify-content-end" id="navbarButtonsExample">
                 <div class="d-flex align-items-center">
-                    <c:if test="${user.name == 'guest'}">
+                    <c:if test="${user == 'anonymousUser'}">
                         <a class="btn btn-link text-decoration-none px-3 me-2" href="<c:url value="/login"/>">
                             Login
                         </a>
                     </c:if>
-                    <c:if test="${user.name == 'guest'}">
+                    <c:if test="${user == 'anonymousUser'}">
                         <a class="btn btn-primary me-3" href="<c:url value="/signup"/>">
                             Signup
                         </a>
                     </c:if>
-                    <c:if test="${user.name != 'guest'}">
+                    <c:if test="${user != 'anonymousUser'}">
                         <a class="nav-link" href="<c:url value="/logout"/>">
-                            <span>${user.name}</span>
+                            <span>${user}</span>
                             <span>| Log out</span>
                         </a>
                     </c:if>

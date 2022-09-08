@@ -1,5 +1,8 @@
 package ru.job4j.forum.control;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -7,8 +10,7 @@ import ru.job4j.forum.model.User;
 import ru.job4j.forum.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.Optional;
+import javax.servlet.http.HttpServletResponse;
 
 @Controller
 public class UserControl {
@@ -19,9 +21,8 @@ public class UserControl {
     }
 
     @GetMapping("/signup")
-    public String signup(@RequestParam(value = "error", required = false) String error,
-                         Model model, HttpSession session) {
-        addUserToModel(model, session);
+    public String signup(@RequestParam(value = "error", required = false) String error, Model model) {
+        model.addAttribute("user", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         String errorMessage = null;
         if (error != null) {
             errorMessage = "This name is already taken. Please, choose another name.";
@@ -31,7 +32,7 @@ public class UserControl {
     }
 
     @GetMapping("/login")
-    public String login(Model model, HttpSession session,
+    public String login(Model model,
                         @RequestParam(value = "error", required = false) String error,
                         @RequestParam(value = "logout", required = false) String logout) {
         String errorMessage = null;
@@ -42,44 +43,24 @@ public class UserControl {
             errorMessage = "You have been successfully logged out";
         }
         model.addAttribute("errorMessage", errorMessage);
-        addUserToModel(model, session);
+        model.addAttribute("user", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         return "login";
     }
 
     @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        session.invalidate();
+    public String logoutPage(HttpServletRequest request, HttpServletResponse response) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null) {
+            new SecurityContextLogoutHandler().logout(request, response, auth);
+        }
         return "redirect:/login?logout=true";
     }
 
     @PostMapping("/signup")
-    public String signup(@ModelAttribute User user, HttpServletRequest req) {
-        Optional<User> regUser = userService.add(user);
-        if (regUser.isEmpty()) {
+    public String signup(@ModelAttribute User user) {
+        if (userService.add(user).isEmpty()) {
             return "redirect:/signup?error=true";
         }
-        HttpSession session = req.getSession();
-        session.setAttribute("user", regUser.get());
-        return "redirect:/index";
-    }
-
-    @PostMapping("/login")
-    public String login(@ModelAttribute User user, HttpServletRequest req) {
-        Optional<User> regUser = userService.findUserByNameAndPassword(user.getName(), user.getPassword());
-        if (regUser.isEmpty()) {
-            return "redirect:/login?error=true";
-        }
-        HttpSession session = req.getSession();
-        session.setAttribute("user", regUser.get());
-        return "redirect:/index";
-    }
-
-    private void addUserToModel(Model model, HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        if (user == null) {
-            user = new User();
-            user.setName("guest");
-        }
-        model.addAttribute("user", user);
+        return "redirect:/login";
     }
 }

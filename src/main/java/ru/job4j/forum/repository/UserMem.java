@@ -37,7 +37,7 @@ public class UserMem {
 
     public Optional<User> findUserByNameAndPassword(String name, String password) {
         return users.stream()
-                .filter(u -> name.equals(u.getName()) && password.equals(u.getPassword()))
+                .filter(u -> name.equals(u.getUsername()) && password.equals(u.getPassword()))
                 .findFirst();
     }
 }

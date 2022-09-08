@@ -17,7 +17,7 @@ public class Post {
 
     @Column(columnDefinition = "timestamp without time zone not null default now()")
     private LocalDateTime created;
-    @OneToMany(cascade = CascadeType.MERGE)
+    @OneToMany
     @JoinColumn(name = "post_id")
     private List<Comment> comments = new ArrayList<>();
     @ManyToOne(cascade = CascadeType.MERGE)

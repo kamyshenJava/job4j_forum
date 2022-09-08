@@ -16,19 +16,19 @@
             </a>
             <div class="d-flex justify-content-end" id="navbarButtonsExample">
                 <div class="d-flex align-items-center">
-                    <c:if test="${user.name == 'guest'}">
+                    <c:if test="${user == 'anonymousUser'}">
                         <a class="btn btn-link text-decoration-none px-3 me-2" href="<c:url value="/login"/>">
                             Login
                         </a>
                     </c:if>
-                    <c:if test="${user.name == 'guest'}">
+                    <c:if test="${user == 'anonymousUser'}">
                         <a class="btn btn-primary me-3" href="<c:url value="/signup"/>">
                             Signup
                         </a>
                     </c:if>
-                    <c:if test="${user.name != 'guest'}">
+                    <c:if test="${user != 'anonymousUser'}">
                         <a class="nav-link" href="<c:url value="/logout"/>">
-                            <span>${user.name}</span>
+                            <span>${user}</span>
                             <span>| Log out</span>
                         </a>
                     </c:if>
@@ -72,7 +72,7 @@
                             <div class="w-100">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="d-flex flex-row align-items-center">
-                                        <h6 class="mr-2"><c:out value="${comment.author.name}"/></h6>
+                                        <h6 class="mr-2"><c:out value="${comment.author.username}"/></h6>
                                     </div>
                                     <small><c:out value="${comment.createdTimeAgo}"/></small>
                                 </div>
