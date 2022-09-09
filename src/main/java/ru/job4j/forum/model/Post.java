@@ -23,10 +23,11 @@ public class Post {
     @ManyToOne(cascade = CascadeType.MERGE)
     private User author;
 
-    public static Post of(String name, String description) {
+    public static Post of(String name, String description, User user) {
         Post post = new Post();
         post.name = name;
         post.description = description;
+        post.author = user;
         post.created = LocalDateTime.now();
         return post;
     }
